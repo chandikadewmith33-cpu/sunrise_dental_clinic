@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See commented blocks below for
+more information on customizing the build.
+
+For the purpose of easier reading the script
+is divided into following sections:
+
+  - initialization
+  - compilation
+  - jar
+  - execution
+  - debugging
+  - javadoc
+  - test compilation
+  - test execution
+  - test debugging
+  - applet
+  - cleanup
+
+        -->
+<project name="Sunrise_Dental_Clinic" default="default" basedir=".">
+    <description>Builds, tests, and runs the project Sunrise_Dental_Clinic.</description>
+    <import file="nbproject/build-impl.xml"/>
+</project>

@@ -1,0 +1,8 @@
+build/
+dist/
+*.class
+*.log
+nbproject/private/
+nbproject/private/*
+.idea/
+.vscode/
