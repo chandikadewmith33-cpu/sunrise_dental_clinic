@@ -109,28 +109,55 @@ public class Login extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         String username = txtUser.getText().trim();
-        String password = new String(jPass.getPassword());
-        
-        btnLogin.addActionListener(this::onLogin);
-        
-    if (username.isEmpty() || password.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Please enter both username and password.",
-                "Missing Information", JOptionPane.WARNING_MESSAGE);
-        return;
-    }
+String password = new String(jPass.getPassword());
 
-    UserDAO userDAO = new UserDAO();
-    User user = userDAO.authenticate(username, password);
+if (username.isEmpty()) {
+    JOptionPane.showMessageDialog(
+        this,
+        "Please enter your username.",
+        "Missing Username",
+        JOptionPane.WARNING_MESSAGE
+    );
+    txtUser.requestFocus();
+    return;
+}
 
-    if (user != null) {
-        JOptionPane.showMessageDialog(this, "Welcome, " + user.getFullName() + "!");
-        new MenuForm(user).setVisible(true);
-        this.dispose();
-    } else {
-        JOptionPane.showMessageDialog(this, "Invalid username or password.",
-                "Login Failed", JOptionPane.ERROR_MESSAGE);
-        jPass.setText("");
-    }
+if (password.isEmpty()) {
+    JOptionPane.showMessageDialog(
+        this,
+        "Please enter your password.",
+        "Missing Password",
+        JOptionPane.WARNING_MESSAGE
+    );
+    jPass.requestFocus();
+    return;
+}
+
+UserDAO userDAO = new UserDAO();
+User user = userDAO.authenticate(username, password);
+
+if (user != null) {
+    JOptionPane.showMessageDialog(
+        this,
+        "Welcome, " + user.getFullName() + "!",
+        "Login Successful",
+        JOptionPane.INFORMATION_MESSAGE
+    );
+
+    new MenuForm(user).setVisible(true);
+    this.dispose();
+
+} else {
+    JOptionPane.showMessageDialog(
+        this,
+        "Invalid username or password.",
+        "Login Failed",
+        JOptionPane.ERROR_MESSAGE
+    );
+
+    jPass.setText("");
+    jPass.requestFocus();
+}
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
