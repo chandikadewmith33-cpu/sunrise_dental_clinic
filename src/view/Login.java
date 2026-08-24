@@ -150,13 +150,14 @@ if (user != null) {
 } else {
     JOptionPane.showMessageDialog(
         this,
-        "Invalid username or password.",
+        "Login failed. Please check your username and password and try again.",
         "Login Failed",
         JOptionPane.ERROR_MESSAGE
     );
 
     jPass.setText("");
     jPass.requestFocus();
+    txtUser.requestFocus();
 }
     }//GEN-LAST:event_btnLoginActionPerformed
 
