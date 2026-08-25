@@ -270,15 +270,26 @@ public class RegisterAppointment extends javax.swing.JFrame {
         || dateStr.isEmpty()
         || timeStr.isEmpty()) {
 
-            JOptionPane.showMessageDialog(
-                this,
-                "Please fill in all required fields.",
-                "Missing Information",
-                JOptionPane.WARNING_MESSAGE
-            );
+    JOptionPane.showMessageDialog(
+            this,
+            "Please fill in all required fields.",
+            "Missing Information",
+            JOptionPane.WARNING_MESSAGE
+    );
+    return;
+}
 
-            return;
-        }
+// Contact number validation
+if (!contact.matches("\\d{10}")) {
+    JOptionPane.showMessageDialog(
+            this,
+            "Contact number must contain exactly 10 digits.",
+            "Invalid Contact Number",
+            JOptionPane.WARNING_MESSAGE
+    );
+    txtConta.requestFocus();
+    return;
+}
 
         Date sqlDate;
         Time sqlTime;
