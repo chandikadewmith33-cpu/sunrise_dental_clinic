@@ -174,6 +174,11 @@ public class RegisterAppointment extends javax.swing.JFrame {
         getContentPane().add(lblTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(66, 381, -1, -1));
 
         txtDate.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtDate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDateActionPerformed(evt);
+            }
+        });
         getContentPane().add(txtDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(265, 352, 227, -1));
 
         btnSaveApp.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -232,6 +237,10 @@ public class RegisterAppointment extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btnCloseAppActionPerformed
 
+    private void txtDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDateActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDateActionPerformed
+
     /**
      * Save appointment to database.
      */
@@ -254,10 +263,12 @@ public class RegisterAppointment extends javax.swing.JFrame {
 
         // Validate required fields
         if (patientName.isEmpty()
-                || contact.isEmpty()
-                || dentist.isEmpty()
-                || dateStr.isEmpty()
-                || timeStr.isEmpty()) {
+        || address.isEmpty()
+        || contact.isEmpty()
+        || dentist.isEmpty()
+        || treatment.isEmpty()
+        || dateStr.isEmpty()
+        || timeStr.isEmpty()) {
 
             JOptionPane.showMessageDialog(
                 this,
