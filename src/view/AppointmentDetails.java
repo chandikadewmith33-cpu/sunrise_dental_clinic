@@ -55,6 +55,7 @@ public class AppointmentDetails extends javax.swing.JFrame {
     private void onSearch() {
 
         String appointmentNo = txtAppNo2.getText().trim();
+        txtARappNo.setText("");
 
         // Check if appointment number was entered
         if (appointmentNo.isEmpty()) {
