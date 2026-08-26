@@ -85,68 +85,83 @@ if (!appointmentNo.matches("[A-Za-z0-9-]+")) {
 }
 
         // Search appointment in database
-        Appointment appointment =
-                appointmentDAO.findByAppointmentNo(appointmentNo);
+        try {
 
-        if (appointment != null) {
+    Appointment appointment =
+            appointmentDAO.findByAppointmentNo(appointmentNo);
 
-            StringBuilder sb = new StringBuilder();
+    if (appointment != null) {
 
-            sb.append("========================================\n");
-            sb.append("        APPOINTMENT DETAILS\n");
-            sb.append("========================================\n\n");
+        StringBuilder sb = new StringBuilder();
 
-            sb.append("Appointment No   : ")
-              .append(appointment.getAppointmentNo())
-              .append("\n\n");
+        sb.append("========================================\n");
+        sb.append("        APPOINTMENT DETAILS\n");
+        sb.append("========================================\n\n");
 
-            sb.append("Patient Name     : ")
-              .append(appointment.getPatientName())
-              .append("\n\n");
+        sb.append("Appointment No   : ")
+          .append(appointment.getAppointmentNo())
+          .append("\n\n");
 
-            sb.append("Address          : ")
-              .append(appointment.getAddress())
-              .append("\n\n");
+        sb.append("Patient Name     : ")
+          .append(appointment.getPatientName())
+          .append("\n\n");
 
-            sb.append("Contact Number   : ")
-              .append(appointment.getContactNumber())
-              .append("\n\n");
+        sb.append("Address          : ")
+          .append(appointment.getAddress())
+          .append("\n\n");
 
-            sb.append("Dentist Name     : ")
-              .append(appointment.getDentistName())
-              .append("\n\n");
+        sb.append("Contact Number   : ")
+          .append(appointment.getContactNumber())
+          .append("\n\n");
 
-            sb.append("Treatment Type   : ")
-              .append(appointment.getTreatmentType())
-              .append("\n\n");
+        sb.append("Dentist Name     : ")
+          .append(appointment.getDentistName())
+          .append("\n\n");
 
-            sb.append("Appointment Date : ")
-              .append(appointment.getAppointmentDate())
-              .append("\n\n");
+        sb.append("Treatment Type   : ")
+          .append(appointment.getTreatmentType())
+          .append("\n\n");
 
-            sb.append("Appointment Time : ")
-              .append(appointment.getAppointmentTime())
-              .append("\n\n");
+        sb.append("Appointment Date : ")
+          .append(appointment.getAppointmentDate())
+          .append("\n\n");
 
-            sb.append("========================================");
+        sb.append("Appointment Time : ")
+          .append(appointment.getAppointmentTime())
+          .append("\n\n");
 
-            txtARappNo.setText(sb.toString());
+        sb.append("========================================");
 
-        } else {
+        txtARappNo.setText(sb.toString());
 
-            // Clear previous result
-            txtARappNo.setText("");
+    } else {
 
-            JOptionPane.showMessageDialog(
-                this,
-                "No appointment found with number: "
-                + appointmentNo,
-                "Not Found",
-                JOptionPane.WARNING_MESSAGE
-            );
+        txtARappNo.setText("");
 
-            txtAppNo2.requestFocus();
-        }
+        JOptionPane.showMessageDialog(
+            this,
+            "No appointment found with number: " + appointmentNo,
+            "Not Found",
+            JOptionPane.WARNING_MESSAGE
+        );
+
+        txtAppNo2.requestFocus();
+    }
+
+} catch (Exception ex) {
+
+    txtARappNo.setText("");
+
+    JOptionPane.showMessageDialog(
+        this,
+        "Unable to search for the appointment.\n"
+        + "Please check the database connection and try again.",
+        "Search Error",
+        JOptionPane.ERROR_MESSAGE
+    );
+
+    txtAppNo2.requestFocus();
+}
     }
 
 
