@@ -59,16 +59,30 @@ public class AppointmentDetails extends javax.swing.JFrame {
         // Check if appointment number was entered
         if (appointmentNo.isEmpty()) {
 
-            JOptionPane.showMessageDialog(
-                this,
-                "Please enter an appointment number.",
-                "Missing Information",
-                JOptionPane.WARNING_MESSAGE
-            );
+    JOptionPane.showMessageDialog(
+        this,
+        "Please enter an appointment number.",
+        "Missing Information",
+        JOptionPane.WARNING_MESSAGE
+    );
 
-            txtAppNo2.requestFocus();
-            return;
-        }
+    txtAppNo2.requestFocus();
+    return;
+}
+
+// Validate appointment number format
+if (!appointmentNo.matches("[A-Za-z0-9-]+")) {
+
+    JOptionPane.showMessageDialog(
+        this,
+        "Appointment number can contain only letters, numbers, and hyphens.",
+        "Invalid Appointment Number",
+        JOptionPane.WARNING_MESSAGE
+    );
+
+    txtAppNo2.requestFocus();
+    return;
+}
 
         // Search appointment in database
         Appointment appointment =
