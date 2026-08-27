@@ -34,10 +34,10 @@ public class AppointmentDAO {
             } else {
                 return "APT0001";
             }
-        } catch (SQLException e) {
-            System.err.println("Error generating appointment number: " + e.getMessage());
-            return "APT0001";
-        }
+        } catch (SQLException | NumberFormatException e) {
+    System.err.println("Error generating appointment number: " + e.getMessage());
+    return "APT0001";
+ }
     }
 
     public boolean insertAppointment(Appointment appointment) {
