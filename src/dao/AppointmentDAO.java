@@ -59,9 +59,14 @@ public class AppointmentDAO {
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("Error inserting appointment: " + e.getMessage());
-            return false;
-        }
+    System.err.println(
+            "Error inserting appointment " 
+            + appointment.getAppointmentNo() 
+            + ": " 
+            + e.getMessage()
+    );
+    return false;
+}
     }
 
     public Appointment findByAppointmentNo(String appointmentNo) {
