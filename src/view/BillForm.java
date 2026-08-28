@@ -161,7 +161,23 @@ public class BillForm extends javax.swing.JFrame {
             appointment.getTreatmentType()
         );
 
-    currentBill = new Bill(
+// Validate treatment cost
+if (treatmentCost <= 0) {
+
+    txtArBill.setText("");
+    currentBill = null;
+
+    JOptionPane.showMessageDialog(
+        this,
+        "Unable to retrieve the treatment cost.",
+        "Billing Error",
+        JOptionPane.ERROR_MESSAGE
+    );
+
+    return;
+}
+
+currentBill = new Bill(
         appointment.getAppointmentNo(),
         appointment.getPatientName(),
         appointment.getTreatmentType(),
