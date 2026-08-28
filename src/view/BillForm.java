@@ -185,12 +185,21 @@ currentBill = new Bill(
         treatmentCost
     );
 
-    appointmentDAO.saveBill(
-        currentBill.getAppointmentNo(),
-        currentBill.getConsultationFee(),
-        currentBill.getTreatmentCost(),
-        currentBill.getTotalAmount()
+    boolean billSaved = appointmentDAO.saveBill(
+    currentBill.getAppointmentNo(),
+    currentBill.getConsultationFee(),
+    currentBill.getTreatmentCost(),
+    currentBill.getTotalAmount()
+);
+
+if (!billSaved) {
+    JOptionPane.showMessageDialog(
+        this,
+        "The bill could not be saved to the database.",
+        "Billing Error",
+        JOptionPane.ERROR_MESSAGE
     );
+}
 
     StringBuilder sb = new StringBuilder();
 
