@@ -93,6 +93,7 @@ public class RegisterAppointment extends javax.swing.JFrame {
         lblBackgroReg = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(830, 700));
         setPreferredSize(new java.awt.Dimension(800, 700));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -208,7 +209,10 @@ public class RegisterAppointment extends javax.swing.JFrame {
         getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 160, 230, 70));
 
         lblBackgroReg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/register (2).png"))); // NOI18N
-        getContentPane().add(lblBackgroReg, new org.netbeans.lib.awtextra.AbsoluteConstraints(-720, -350, 1520, 1030));
+        lblBackgroReg.setMaximumSize(new java.awt.Dimension(2147483647, 2147483647));
+        lblBackgroReg.setMinimumSize(new java.awt.Dimension(830, 700));
+        lblBackgroReg.setPreferredSize(new java.awt.Dimension(800, 700));
+        getContentPane().add(lblBackgroReg, new org.netbeans.lib.awtextra.AbsoluteConstraints(-690, -350, 1520, 1030));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
