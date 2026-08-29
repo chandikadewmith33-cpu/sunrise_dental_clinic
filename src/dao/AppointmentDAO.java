@@ -15,6 +15,86 @@ import java.util.List;
  * Data access for appointments, treatment costs and bills.
  */
 public class AppointmentDAO {
+    public boolean deleteByAppointmentNo(String appointmentNo) {
+
+    String deleteBillSQL = "DELETE FROM bills WHERE appointment_no = ?";
+    String deleteAppointmentSQL = "DELETE FROM appointments WHERE appointment_no = ?";
+
+    Connection con = null;
+
+    try {
+        con = DBConnection.getConnection();
+
+        // Start transaction
+        con.setAutoCommit(false);
+
+        // First delete any bill connected to this appointment.
+        try (PreparedStatement psBill = con.prepareStatement(deleteBillSQL)) {
+
+            psBill.setString(1, appointmentNo);
+            psBill.executeUpdate();
+        }
+
+        // Then delete the appointment.
+        int rowsAffected;
+
+        try (PreparedStatement psAppointment =
+                     con.prepareStatement(deleteAppointmentSQL)) {
+
+            psAppointment.setString(1, appointmentNo);
+            rowsAffected = psAppointment.executeUpdate();
+        }
+
+        // If appointment was deleted successfully, commit.
+        if (rowsAffected > 0) {
+
+            con.commit();
+            return true;
+
+        } else {
+
+            // Appointment was not found, so undo any bill deletion.
+            con.rollback();
+            return false;
+        }
+
+    } catch (SQLException e) {
+
+        // Undo changes if something goes wrong.
+        if (con != null) {
+            try {
+                con.rollback();
+            } catch (SQLException rollbackException) {
+                System.err.println(
+                    "Rollback error: " + rollbackException.getMessage()
+                );
+            }
+        }
+
+        System.err.println(
+            "Delete appointment error: " + e.getMessage()
+        );
+
+        e.printStackTrace();
+
+        return false;
+
+    } finally {
+
+        if (con != null) {
+            try {
+                con.setAutoCommit(true);
+                con.close();
+            } catch (SQLException e) {
+                System.err.println(
+                    "Connection closing error: " + e.getMessage()
+                );
+            }
+        }
+    }
+}
+
+
 
     /**
      * Generates the next appointment number in the format APT0001, APT0002, ...
