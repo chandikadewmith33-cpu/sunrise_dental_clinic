@@ -29,9 +29,7 @@ public class Login extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         
-        JPasswordField txtPassword = new JPasswordField();
-        txtPassword.setBounds(150, 120, 180, 25);
-        txtPassword.addActionListener(this::onLogin);
+        
     }
     
 
@@ -97,6 +95,8 @@ public class Login extends javax.swing.JFrame {
         getContentPane().add(jPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 380, 220, -1));
 
         lblBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Background.png"))); // NOI18N
+        lblBackground.setMaximumSize(new java.awt.Dimension(2147483647, 2147483647));
+        lblBackground.setMinimumSize(new java.awt.Dimension(830, 700));
         lblBackground.setPreferredSize(new java.awt.Dimension(800, 700));
         getContentPane().add(lblBackground, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 0, 840, 700));
 
@@ -213,9 +213,7 @@ if (user != null) {
     private javax.swing.JTextField txtUser;
     // End of variables declaration//GEN-END:variables
 
-    private void onLogin(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    
 
    
 }
