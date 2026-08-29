@@ -40,13 +40,6 @@ public class AppointmentDetails extends javax.swing.JFrame {
                 onSearch();
             }
         });
-        
-        // Search button
-        btnSearch2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                onSearch();
-            }
-        });
     }
 
     /**
@@ -175,16 +168,17 @@ if (!appointmentNo.matches("[A-Za-z0-9-]+")) {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
         lblSearch = new javax.swing.JLabel();
         lblAppNo1 = new javax.swing.JLabel();
         txtAppNo2 = new javax.swing.JTextField();
         btnSearch2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtARappNo = new javax.swing.JTextArea();
-        jLabel2 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(830, 700));
         setPreferredSize(new java.awt.Dimension(800, 700));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -198,12 +192,17 @@ if (!appointmentNo.matches("[A-Za-z0-9-]+")) {
         getContentPane().add(lblAppNo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 70, 130, 28));
 
         txtAppNo2.setBackground(new java.awt.Color(244, 244, 255));
-        getContentPane().add(txtAppNo2, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 70, 208, 35));
+        getContentPane().add(txtAppNo2, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 70, 208, 35));
 
         btnSearch2.setBackground(new java.awt.Color(217, 250, 250));
         btnSearch2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnSearch2.setText("Search");
-        getContentPane().add(btnSearch2, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 80, 110, -1));
+        btnSearch2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearch2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnSearch2, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 70, 110, -1));
 
         txtARappNo.setBackground(new java.awt.Color(244, 244, 255));
         txtARappNo.setColumns(20);
@@ -212,11 +211,112 @@ if (!appointmentNo.matches("[A-Za-z0-9-]+")) {
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 130, 640, 410));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Dashboard.png"))); // NOI18N
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-540, -330, 1470, 990));
+        jButton1.setBackground(new java.awt.Color(217, 250, 250));
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jButton1.setText("Delete");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(588, 70, 104, -1));
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Dashboard.png"))); // NOI18N
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(-600, -330, 1480, 990));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSearch2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearch2ActionPerformed
+        onSearch();
+    }//GEN-LAST:event_btnSearch2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+       String appointmentNo = txtAppNo2.getText().trim();
+
+    // Check whether appointment number was entered
+    if (appointmentNo.isEmpty()) {
+        JOptionPane.showMessageDialog(
+            this,
+            "Please enter an appointment number first.",
+            "Missing Information",
+            JOptionPane.WARNING_MESSAGE
+        );
+
+        txtAppNo2.requestFocus();
+        return;
+    }
+
+    // Check whether appointment details are currently displayed
+    if (txtARappNo.getText().trim().isEmpty()) {
+        JOptionPane.showMessageDialog(
+            this,
+            "Please search for an appointment before deleting.",
+            "No Appointment Selected",
+            JOptionPane.WARNING_MESSAGE
+        );
+
+        txtAppNo2.requestFocus();
+        return;
+    }
+
+    // Ask for confirmation
+    int choice = JOptionPane.showConfirmDialog(
+        this,
+        "Are you sure you want to delete appointment " + appointmentNo + "?",
+        "Confirm Delete",
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.WARNING_MESSAGE
+    );
+
+    if (choice != JOptionPane.YES_OPTION) {
+        return;
+    }
+
+    // Delete appointment from database
+    try {
+
+        boolean deleted = appointmentDAO.deleteByAppointmentNo(appointmentNo);
+
+        if (deleted) {
+
+            txtARappNo.setText("");
+            txtAppNo2.setText("");
+
+            JOptionPane.showMessageDialog(
+                this,
+                "Appointment " + appointmentNo + " has been deleted successfully.",
+                "Delete Successful",
+                JOptionPane.INFORMATION_MESSAGE
+            );
+
+            txtAppNo2.requestFocus();
+
+        } else {
+
+            JOptionPane.showMessageDialog(
+                this,
+                "Appointment could not be deleted.\n"
+                + "The appointment may no longer exist.",
+                "Delete Failed",
+                JOptionPane.ERROR_MESSAGE
+            );
+        }
+
+    } catch (Exception ex) {
+
+        JOptionPane.showMessageDialog(
+            this,
+            "Unable to delete the appointment.\n"
+            + "Please check the database connection.",
+            "Delete Error",
+            JOptionPane.ERROR_MESSAGE
+        );
+
+        ex.printStackTrace();
+    }
+
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -250,14 +350,16 @@ if (!appointmentNo.matches("[A-Za-z0-9-]+")) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new AppointmentDetails().setVisible(true);
-            }
+}
         });
-    }
+}
+
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSearch2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblAppNo1;
     private javax.swing.JLabel lblSearch;
