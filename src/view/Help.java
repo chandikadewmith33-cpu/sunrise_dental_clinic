@@ -81,6 +81,7 @@ public class Help extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(830, 700));
         setPreferredSize(new java.awt.Dimension(800, 700));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -93,13 +94,16 @@ public class Help extends javax.swing.JFrame {
         txtArHelp.setRows(5);
         jScrollPane1.setViewportView(txtArHelp);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 798, 450));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 760, 450));
 
         btnClose4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnClose4.setText("Close");
         getContentPane().add(btnClose4, new org.netbeans.lib.awtextra.AbsoluteConstraints(364, 546, -1, -1));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Background.png"))); // NOI18N
+        jLabel1.setMaximumSize(new java.awt.Dimension(2147483647, 2147483647));
+        jLabel1.setMinimumSize(new java.awt.Dimension(830, 700));
+        jLabel1.setPreferredSize(new java.awt.Dimension(800, 700));
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-100, 0, 970, 660));
 
         pack();
