@@ -13,18 +13,39 @@ import model.User;
  * @author D
  */
 public class MenuForm extends javax.swing.JFrame {
+    private User currentUser;
 
     /**
      * Creates new form NewForm
      */
     public MenuForm(User user) {
         initComponents();
-        
-        setTitle("Sunrise Dental Clinic - Main Menu");
-        setSize(450, 420);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
+
+    currentUser = user;
+
+    setTitle("Sunrise Dental Clinic - Main Menu");
+    setSize(800, 700);
+    setLocationRelativeTo(null);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setResizable(false);
+
+    lblName2.setText(
+        "Logged In As: " + user.getFullName()
+        + " (" + user.getRole() + ")"
+    );
+
+    if ("DOCTOR".equalsIgnoreCase(user.getRole())) {
+
+    btnBillCal.setEnabled(false);
+    btnBillCal.setText(
+        "3.Calculate and Print Bill (Restricted)"
+    );
+
+    jButton1.setEnabled(false);
+    jButton1.setText(
+        "4.Manage Users (Restricted)"
+    );
+}
         
     }
 
@@ -43,8 +64,9 @@ public class MenuForm extends javax.swing.JFrame {
         btnBillCal = new javax.swing.JButton();
         btnHelp = new javax.swing.JButton();
         btnRegister = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         btnExit1 = new javax.swing.JButton();
-        Dashboardlbl = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(830, 700));
@@ -83,13 +105,13 @@ public class MenuForm extends javax.swing.JFrame {
 
         btnHelp.setBackground(new java.awt.Color(204, 204, 255));
         btnHelp.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnHelp.setText("4.Help");
+        btnHelp.setText("5.Help");
         btnHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHelpActionPerformed(evt);
             }
         });
-        getContentPane().add(btnHelp, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 350, 110, -1));
+        getContentPane().add(btnHelp, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 380, 110, -1));
 
         btnRegister.setBackground(new java.awt.Color(204, 204, 255));
         btnRegister.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -101,37 +123,49 @@ public class MenuForm extends javax.swing.JFrame {
         });
         getContentPane().add(btnRegister, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 207, 250, 30));
 
+        jButton1.setBackground(new java.awt.Color(204, 204, 255));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton1.setText("4.Mange Users");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 340, 250, 29));
+
         btnExit1.setBackground(new java.awt.Color(204, 204, 255));
         btnExit1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnExit1.setText("5.Exit");
+        btnExit1.setText("6.Exit");
         btnExit1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExit1ActionPerformed(evt);
             }
         });
-        getContentPane().add(btnExit1, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 350, 100, -1));
+        getContentPane().add(btnExit1, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 380, 110, -1));
 
-        Dashboardlbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Dashboard.png"))); // NOI18N
-        Dashboardlbl.setPreferredSize(new java.awt.Dimension(800, 700));
-        getContentPane().add(Dashboardlbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1000, 790));
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Dashboard.png"))); // NOI18N
+        jLabel2.setMaximumSize(new java.awt.Dimension(2147483647, 2147483647));
+        jLabel2.setMinimumSize(new java.awt.Dimension(830, 700));
+        jLabel2.setPreferredSize(new java.awt.Dimension(800, 700));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-40, -100, 1150, 780));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDisplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisplayActionPerformed
-        btnDisplay.addActionListener(e -> new AppointmentDetails().setVisible(true));
+        new AppointmentDetails().setVisible(true);
     }//GEN-LAST:event_btnDisplayActionPerformed
 
     private void btnBillCalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBillCalActionPerformed
-        btnBillCal.addActionListener(e -> new BillForm().setVisible(true));
+        new BillForm().setVisible(true);
     }//GEN-LAST:event_btnBillCalActionPerformed
 
     private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHelpActionPerformed
-        btnHelp.addActionListener(e -> new Help().setVisible(true));
+        new Help().setVisible(true);
     }//GEN-LAST:event_btnHelpActionPerformed
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
-        btnRegister.addActionListener(e -> new RegisterAppointment().setVisible(true));
+        new RegisterAppointment().setVisible(true);
     }//GEN-LAST:event_btnRegisterActionPerformed
 
     private void btnExit1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExit1ActionPerformed
@@ -143,6 +177,11 @@ public class MenuForm extends javax.swing.JFrame {
         }
         btnExit1.addActionListener(e -> onExit());
     }//GEN-LAST:event_btnExit1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        new ManageUsers(currentUser).setVisible(true);
+    this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -171,6 +210,8 @@ public class MenuForm extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -182,12 +223,13 @@ public class MenuForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel Dashboardlbl;
     private javax.swing.JButton btnBillCal;
     private javax.swing.JButton btnDisplay;
     private javax.swing.JButton btnExit1;
     private javax.swing.JButton btnHelp;
     private javax.swing.JButton btnRegister;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lblName1;
     private javax.swing.JLabel lblName2;
     // End of variables declaration//GEN-END:variables
