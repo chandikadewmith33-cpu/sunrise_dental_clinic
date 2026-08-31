@@ -45,6 +45,32 @@ public class MenuForm extends javax.swing.JFrame {
     jButton1.setText(
         "4.Manage Users (Restricted)"
     );
+    } else if ("RECEPTIONIST".equalsIgnoreCase(user.getRole())) {
+
+    // Receptionist CAN access billing
+    btnBillCal.setEnabled(true);
+    btnBillCal.setText(
+        "3.Calculate and Print Bill"
+    );
+
+    // Receptionist CANNOT manage users
+    jButton1.setEnabled(false);
+    jButton1.setText(
+        "4.Manage Users (Restricted)"
+    );
+
+} else if ("ADMIN".equalsIgnoreCase(user.getRole())) {
+
+    // Admin can access everything
+    btnBillCal.setEnabled(true);
+    btnBillCal.setText(
+        "3.Calculate and Print Bill"
+    );
+
+    jButton1.setEnabled(true);
+    jButton1.setText(
+        "4.Manage Users"
+    );
 }
         
     }
@@ -169,13 +195,18 @@ public class MenuForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegisterActionPerformed
 
     private void btnExit1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExit1ActionPerformed
-        int choice = JOptionPane.showConfirmDialog(this,
-                "Are you sure you want to exit the system?",
-                "Confirm Exit", JOptionPane.YES_NO_OPTION);
-        if (choice == JOptionPane.YES_OPTION) {
-            System.exit(0);
-        }
-        btnExit1.addActionListener(e -> onExit());
+        int choice = JOptionPane.showConfirmDialog(
+            this,
+            "Are you sure you want to go back to the Login page?",
+            "Confirm Logout",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE
+    );
+
+    if (choice == JOptionPane.YES_OPTION) {
+        new Login().setVisible(true);
+        this.dispose();
+    }
     }//GEN-LAST:event_btnExit1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
