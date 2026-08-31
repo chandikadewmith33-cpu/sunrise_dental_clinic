@@ -38,6 +38,7 @@ public class ManageUsers extends javax.swing.JFrame {
     jComboBoxRole.removeAllItems();
     jComboBoxRole.addItem("ADMIN");
     jComboBoxRole.addItem("DOCTOR");
+    jComboBoxRole.addItem("RECEPTIONIST");
 
     // Load usernames from database
     loadUsernames();
