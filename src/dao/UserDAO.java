@@ -10,14 +10,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Data access for staff login/authentication.
  */
 public class UserDAO {
 
     public User authenticate(String username, String password) {
-        
 
         String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
 
@@ -166,5 +164,39 @@ public class UserDAO {
             return false;
         }
     }
-}
 
+    /**
+     * Get all doctors from the database.
+     *
+     * Only users with the DOCTOR role are returned.
+     */
+    public String[] getAllDoctors() {
+
+        List<String> doctors = new ArrayList<>();
+
+        String sql = "SELECT full_name "
+                + "FROM users "
+                + "WHERE role = 'DOCTOR' "
+                + "ORDER BY full_name";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+
+                doctors.add(
+                        rs.getString("full_name")
+                );
+            }
+
+        } catch (SQLException e) {
+
+            System.err.println(
+                    "Error loading doctors: " + e.getMessage()
+            );
+        }
+
+        return doctors.toArray(new String[0]);
+    }
+}
