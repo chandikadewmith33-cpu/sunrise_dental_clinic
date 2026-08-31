@@ -234,4 +234,48 @@ public class AppointmentDAO {
             return false;
         }
     }
+    /**
+ * Get doctors who are not already booked for the selected date and time.
+ */
+public String[] getAvailableDoctors(String date, String time) {
+
+    List<String> doctors = new ArrayList<>();
+
+    String sql = "SELECT full_name "
+            + "FROM users "
+            + "WHERE role = 'DOCTOR' "
+            + "AND full_name NOT IN ("
+            + "    SELECT dentist_name "
+            + "    FROM appointments "
+            + "    WHERE appointment_date = ? "
+            + "    AND appointment_time = ?"
+            + ") "
+            + "ORDER BY full_name";
+
+    try (Connection con = DBConnection.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        ps.setDate(1, java.sql.Date.valueOf(date));
+        ps.setTime(2, java.sql.Time.valueOf(time + ":00"));
+
+        try (ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+
+                doctors.add(
+                        rs.getString("full_name")
+                );
+            }
+        }
+
+    } catch (SQLException | IllegalArgumentException e) {
+
+        System.err.println(
+                "Error loading available doctors: "
+                + e.getMessage()
+        );
+    }
+
+    return doctors.toArray(new String[0]);
+}
 }
