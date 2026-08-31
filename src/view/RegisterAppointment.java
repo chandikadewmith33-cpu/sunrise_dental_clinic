@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import model.Appointment;
+import dao.UserDAO;
 
 /**
  *
@@ -20,6 +21,7 @@ import model.Appointment;
 public class RegisterAppointment extends javax.swing.JFrame {
 
     private AppointmentDAO appointmentDAO;
+    private UserDAO userDAO;
 
     /**
      * Creates new form NewRegister
@@ -27,38 +29,41 @@ public class RegisterAppointment extends javax.swing.JFrame {
     public RegisterAppointment() {
         initComponents();
 
-     appointmentDAO = new AppointmentDAO();
+    appointmentDAO = new AppointmentDAO();
+    userDAO = new UserDAO();
 
-        // Generate appointment number
-        txtappNo.setText(appointmentDAO.generateNextAppointmentNo());
-        txtappNo.setEditable(false);
+    // Generate appointment number
+    txtappNo.setText(appointmentDAO.generateNextAppointmentNo());
+    txtappNo.setEditable(false);
 
-        // Address settings
-        txtAddre.setLineWrap(true);
-        txtAddre.setWrapStyleWord(true);
+    // Address settings
+    txtAddre.setLineWrap(true);
+    txtAddre.setWrapStyleWord(true);
 
-        // Load treatment types from database
-        // Treatment types
-        String[] treatments = {
-                "Braces Consultation",
-                "Consultation",
-                "Denture Fitting",
-                "Extraction",
-                "Filling",
-                "Root Canal",
-                "Scaling",
-                "Whitening"
-            };
+    // Load doctors from database
+    loadDoctors();
 
-        jcbTreat.setModel(
-            new javax.swing.DefaultComboBoxModel<>(treatments)
-        );
+    // Load treatment types
+    String[] treatments = {
+        "Braces Consultation",
+        "Consultation",
+        "Denture Fitting",
+        "Extraction",
+        "Filling",
+        "Root Canal",
+        "Scaling",
+        "Whitening"
+    };
 
-        setTitle("Register New Appointment");
-        setSize(800, 560);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setResizable(false);
+    jcbTreat.setModel(
+        new javax.swing.DefaultComboBoxModel<>(treatments)
+    );
+
+    setTitle("Register New Appointment");
+    setSize(800, 560);
+    setLocationRelativeTo(null);
+    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    setResizable(false);
     }
 
     /**
@@ -83,14 +88,14 @@ public class RegisterAppointment extends javax.swing.JFrame {
         lblDenti = new javax.swing.JLabel();
         jcbTreat = new javax.swing.JComboBox<>();
         lblDate = new javax.swing.JLabel();
-        txtDenti = new javax.swing.JTextField();
         lblTime = new javax.swing.JLabel();
         txtDate = new javax.swing.JTextField();
         btnSaveApp = new javax.swing.JButton();
         btnCloseApp = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtAddre = new javax.swing.JTextArea();
-        lblBackgroReg = new javax.swing.JLabel();
+        jComboBoxdenti = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(830, 700));
@@ -136,6 +141,11 @@ public class RegisterAppointment extends javax.swing.JFrame {
         getContentPane().add(txtPateint, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 120, 230, -1));
 
         txtTime.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtTime.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTimeActionPerformed(evt);
+            }
+        });
         getContentPane().add(txtTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(265, 382, 227, -1));
 
         lblTreat.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -166,9 +176,6 @@ public class RegisterAppointment extends javax.swing.JFrame {
         lblDate.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         lblDate.setText("Date (yyyy-mm-dd)");
         getContentPane().add(lblDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(66, 351, -1, -1));
-
-        txtDenti.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        getContentPane().add(txtDenti, new org.netbeans.lib.awtextra.AbsoluteConstraints(265, 280, 227, -1));
 
         lblTime.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         lblTime.setText("Time (hh:mm)");
@@ -208,11 +215,12 @@ public class RegisterAppointment extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 160, 230, 70));
 
-        lblBackgroReg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/register (2).png"))); // NOI18N
-        lblBackgroReg.setMaximumSize(new java.awt.Dimension(2147483647, 2147483647));
-        lblBackgroReg.setMinimumSize(new java.awt.Dimension(830, 700));
-        lblBackgroReg.setPreferredSize(new java.awt.Dimension(800, 700));
-        getContentPane().add(lblBackgroReg, new org.netbeans.lib.awtextra.AbsoluteConstraints(-690, -350, 1520, 1030));
+        jComboBoxdenti.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jComboBoxdenti.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        getContentPane().add(jComboBoxdenti, new org.netbeans.lib.awtextra.AbsoluteConstraints(265, 279, 227, -1));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/register (2).png"))); // NOI18N
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-710, -350, 1530, 1020));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -242,8 +250,12 @@ public class RegisterAppointment extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCloseAppActionPerformed
 
     private void txtDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDateActionPerformed
-        // TODO add your handling code here:
+        loadAvailableDoctors();
     }//GEN-LAST:event_txtDateActionPerformed
+
+    private void txtTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTimeActionPerformed
+        loadAvailableDoctors();
+    }//GEN-LAST:event_txtTimeActionPerformed
 
     /**
      * Save appointment to database.
@@ -254,7 +266,11 @@ public class RegisterAppointment extends javax.swing.JFrame {
         String patientName = txtPateint.getText().trim();
         String address = txtAddre.getText().trim();
         String contact = txtConta.getText().trim();
-        String dentist = txtDenti.getText().trim();
+        String dentist = "";
+
+if (jComboBoxdenti.getSelectedItem() != null) {
+    dentist = jComboBoxdenti.getSelectedItem().toString().trim();
+}
 
         String treatment = "";
 
@@ -282,6 +298,17 @@ public class RegisterAppointment extends javax.swing.JFrame {
     );
     return;
 }
+        if (dentist.equals("No doctors available")) {
+
+    JOptionPane.showMessageDialog(
+        this,
+        "There are currently no doctors available.",
+        "No Doctors",
+        JOptionPane.WARNING_MESSAGE
+    );
+
+    return;
+        }
 
 // Contact number validation
 if (!contact.matches("\\d{10}")) {
@@ -388,7 +415,9 @@ if (!contact.matches("\\d{10}")) {
         txtPateint.setText("");
         txtAddre.setText("");
         txtConta.setText("");
-        txtDenti.setText("");
+        if (jComboBoxdenti.getItemCount() > 0) {
+    jComboBoxdenti.setSelectedIndex(0);
+}
         txtDate.setText("");
         txtTime.setText("");
 
@@ -464,6 +493,7 @@ if (!contact.matches("\\d{10}")) {
                 }
             }
         );
+        
     }
     
     
@@ -473,10 +503,11 @@ if (!contact.matches("\\d{10}")) {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCloseApp;
     private javax.swing.JButton btnSaveApp;
+    private javax.swing.JComboBox<String> jComboBoxdenti;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JComboBox<String> jcbTreat;
     private javax.swing.JLabel lblAddre;
-    private javax.swing.JLabel lblBackgroReg;
     private javax.swing.JLabel lblCon;
     private javax.swing.JLabel lblDate;
     private javax.swing.JLabel lblDenti;
@@ -488,9 +519,90 @@ if (!contact.matches("\\d{10}")) {
     private javax.swing.JTextArea txtAddre;
     private javax.swing.JTextField txtConta;
     private javax.swing.JTextField txtDate;
-    private javax.swing.JTextField txtDenti;
     private javax.swing.JTextField txtPateint;
     private javax.swing.JTextField txtTime;
     private javax.swing.JTextField txtappNo;
     // End of variables declaration//GEN-END:variables
+
+    private void loadDoctors() {
+
+    String[] doctors = userDAO.getAllDoctors();
+
+    if (doctors.length > 0) {
+
+        jComboBoxdenti.setModel(
+            new javax.swing.DefaultComboBoxModel<>(doctors)
+        );
+
+    } else {
+
+        jComboBoxdenti.setModel(
+            new javax.swing.DefaultComboBoxModel<>(
+                new String[]{"No doctors available"}
+            )
+        );
+
+        jComboBoxdenti.setSelectedIndex(0);
+    }
+}
+    /**
+ * Load doctors who are available for the selected date and time.
+ */
+private void loadAvailableDoctors() {
+
+    String date = txtDate.getText().trim();
+    String time = txtTime.getText().trim();
+
+    if (date.isEmpty() || time.isEmpty()) {
+        return;
+    }
+
+    try {
+
+        // Validate date
+        SimpleDateFormat dateFormat =
+                new SimpleDateFormat("yyyy-MM-dd");
+
+        dateFormat.setLenient(false);
+        dateFormat.parse(date);
+
+        // Validate time
+        SimpleDateFormat timeFormat =
+                new SimpleDateFormat("HH:mm");
+
+        timeFormat.setLenient(false);
+        timeFormat.parse(time);
+
+        String[] doctors =
+                appointmentDAO.getAvailableDoctors(date, time);
+
+        if (doctors.length > 0) {
+
+            jComboBoxdenti.setModel(
+                new javax.swing.DefaultComboBoxModel<>(doctors)
+            );
+
+        } else {
+
+            jComboBoxdenti.setModel(
+                new javax.swing.DefaultComboBoxModel<>(
+                    new String[]{"No doctors available"}
+                )
+            );
+
+            JOptionPane.showMessageDialog(
+                this,
+                "No doctors are available for "
+                + date + " at " + time + ".",
+                "No Doctors Available",
+                JOptionPane.INFORMATION_MESSAGE
+            );
+        }
+
+    } catch (ParseException e) {
+
+        // Don't show an error while the user is still typing.
+        // The final validation happens when Save is clicked.
+    }
+}
 }
