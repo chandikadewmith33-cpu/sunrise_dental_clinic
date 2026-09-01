@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import model.Appointment;
 import dao.UserDAO;
+import service.EmailService;
 
 /**
  *
@@ -95,7 +96,9 @@ public class RegisterAppointment extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         txtAddre = new javax.swing.JTextArea();
         jComboBoxdenti = new javax.swing.JComboBox<>();
-        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        txtEmail = new javax.swing.JTextField();
+        lblBackground = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(830, 700));
@@ -219,8 +222,15 @@ public class RegisterAppointment extends javax.swing.JFrame {
         jComboBoxdenti.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         getContentPane().add(jComboBoxdenti, new org.netbeans.lib.awtextra.AbsoluteConstraints(265, 279, 227, -1));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/register (2).png"))); // NOI18N
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-710, -350, 1530, 1020));
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel2.setText("Email:");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(66, 423, 70, -1));
+
+        txtEmail.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        getContentPane().add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(265, 423, 227, -1));
+
+        lblBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/register (2).png"))); // NOI18N
+        getContentPane().add(lblBackground, new org.netbeans.lib.awtextra.AbsoluteConstraints(-710, -340, 1530, 1000));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -266,6 +276,7 @@ public class RegisterAppointment extends javax.swing.JFrame {
         String patientName = txtPateint.getText().trim();
         String address = txtAddre.getText().trim();
         String contact = txtConta.getText().trim();
+        String email = txtEmail.getText().trim();
         String dentist = "";
 
 if (jComboBoxdenti.getSelectedItem() != null) {
@@ -321,6 +332,19 @@ if (!contact.matches("\\d{10}")) {
     txtConta.requestFocus();
     return;
 }
+// Email validation
+if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+
+    JOptionPane.showMessageDialog(
+            this,
+            "Please enter a valid email address.",
+            "Invalid Email",
+            JOptionPane.WARNING_MESSAGE
+    );
+
+    txtEmail.requestFocus();
+    return;
+}
 
         Date sqlDate;
         Time sqlTime;
@@ -365,15 +389,16 @@ if (!contact.matches("\\d{10}")) {
 
         // Create Appointment object
         Appointment appointment = new Appointment(
-                appointmentNo,
-                patientName,
-                address,
-                contact,
-                dentist,
-                treatment,
-                sqlDate,
-                sqlTime
-        );
+        appointmentNo,
+        patientName,
+        address,
+        contact,
+        email,
+        dentist,
+        treatment,
+        sqlDate,
+        sqlTime
+);
 
         // Insert appointment into database
         boolean success =
@@ -381,26 +406,49 @@ if (!contact.matches("\\d{10}")) {
 
         if (success) {
 
-            JOptionPane.showMessageDialog(
-                this,
-                "Appointment registered successfully!\n"
-                + "Appointment No: " + appointmentNo,
-                "Success",
-                JOptionPane.INFORMATION_MESSAGE
-            );
+    // Send appointment confirmation email
+    boolean emailSent = EmailService.sendAppointmentEmail(
+            email,
+            patientName,
+            appointmentNo,
+            "Please contact Sunrise Dental Clinic for your appointment details."
+    );
 
-            clearForm();
+    if (emailSent) {
 
-        } else {
+        JOptionPane.showMessageDialog(
+            this,
+            "Appointment registered successfully!\n"
+            + "Appointment No: " + appointmentNo
+            + "\n\nConfirmation email sent successfully.",
+            "Success",
+            JOptionPane.INFORMATION_MESSAGE
+        );
 
-            JOptionPane.showMessageDialog(
-                this,
-                "Failed to register appointment.\n"
-                + "Please try again.",
-                "Database Error",
-                JOptionPane.ERROR_MESSAGE
-            );
-        }
+    } else {
+
+        JOptionPane.showMessageDialog(
+            this,
+            "Appointment registered successfully!\n"
+            + "Appointment No: " + appointmentNo
+            + "\n\nHowever, the confirmation email could not be sent.",
+            "Appointment Saved",
+            JOptionPane.WARNING_MESSAGE
+        );
+    }
+
+    clearForm();
+
+} else {
+
+    JOptionPane.showMessageDialog(
+        this,
+        "Failed to register appointment.\n"
+        + "Please try again.",
+        "Database Error",
+        JOptionPane.ERROR_MESSAGE
+    );
+}
     }
 
     /**
@@ -415,6 +463,7 @@ if (!contact.matches("\\d{10}")) {
         txtPateint.setText("");
         txtAddre.setText("");
         txtConta.setText("");
+        txtEmail.setText("");
         if (jComboBoxdenti.getItemCount() > 0) {
     jComboBoxdenti.setSelectedIndex(0);
 }
@@ -426,6 +475,7 @@ if (!contact.matches("\\d{10}")) {
         }
 
         txtPateint.requestFocus();
+        txtEmail.setText("");
     }
     /**
      * @param args the command line arguments
@@ -483,6 +533,7 @@ if (!contact.matches("\\d{10}")) {
                     null,
                     ex
             );
+            
         }
 
         /* Create and display the form */
@@ -504,10 +555,11 @@ if (!contact.matches("\\d{10}")) {
     private javax.swing.JButton btnCloseApp;
     private javax.swing.JButton btnSaveApp;
     private javax.swing.JComboBox<String> jComboBoxdenti;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JComboBox<String> jcbTreat;
     private javax.swing.JLabel lblAddre;
+    private javax.swing.JLabel lblBackground;
     private javax.swing.JLabel lblCon;
     private javax.swing.JLabel lblDate;
     private javax.swing.JLabel lblDenti;
@@ -519,6 +571,7 @@ if (!contact.matches("\\d{10}")) {
     private javax.swing.JTextArea txtAddre;
     private javax.swing.JTextField txtConta;
     private javax.swing.JTextField txtDate;
+    private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtPateint;
     private javax.swing.JTextField txtTime;
     private javax.swing.JTextField txtappNo;

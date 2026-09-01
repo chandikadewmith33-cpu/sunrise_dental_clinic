@@ -121,9 +121,10 @@ public class AppointmentDAO {
     }
 
     public boolean insertAppointment(Appointment appointment) {
-        String sql = "INSERT INTO appointments (appointment_no, patient_name, address, contact_number, "
-                + "dentist_name, treatment_type, appointment_date, appointment_time) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO appointments "
+        + "(appointment_no, patient_name, address, contact_number, email, "
+        + "dentist_name, treatment_type, appointment_date, appointment_time) "
+        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -132,10 +133,11 @@ public class AppointmentDAO {
             ps.setString(2, appointment.getPatientName());
             ps.setString(3, appointment.getAddress());
             ps.setString(4, appointment.getContactNumber());
-            ps.setString(5, appointment.getDentistName());
-            ps.setString(6, appointment.getTreatmentType());
-            ps.setDate(7, appointment.getAppointmentDate());
-            ps.setTime(8, appointment.getAppointmentTime());
+            ps.setString(5, appointment.getEmail());
+            ps.setString(6, appointment.getDentistName());
+            ps.setString(7, appointment.getTreatmentType());
+            ps.setDate(8, appointment.getAppointmentDate());
+            ps.setTime(9, appointment.getAppointmentTime());
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -160,14 +162,15 @@ public class AppointmentDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return new Appointment(
-                            rs.getString("appointment_no"),
-                            rs.getString("patient_name"),
-                            rs.getString("address"),
-                            rs.getString("contact_number"),
-                            rs.getString("dentist_name"),
-                            rs.getString("treatment_type"),
-                            rs.getDate("appointment_date"),
-                            rs.getTime("appointment_time")
+                        rs.getString("appointment_no"),
+                        rs.getString("patient_name"),
+                        rs.getString("address"),
+                        rs.getString("contact_number"),
+                        rs.getString("email"),
+                        rs.getString("dentist_name"),
+                        rs.getString("treatment_type"),
+                        rs.getDate("appointment_date"),
+                        rs.getTime("appointment_time")
                     );
                 }
             }

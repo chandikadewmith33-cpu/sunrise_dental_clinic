@@ -11,6 +11,7 @@ public class Appointment {
     private String patientName;
     private String address;
     private String contactNumber;
+    private String email;
     private String dentistName;
     private String treatmentType;
     private Date appointmentDate;
@@ -20,17 +21,20 @@ public class Appointment {
     }
 
     public Appointment(String appointmentNo, String patientName, String address,
-                        String contactNumber, String dentistName, String treatmentType,
-                        Date appointmentDate, Time appointmentTime) {
+                    String contactNumber, String email,
+                    String dentistName, String treatmentType,
+                    Date appointmentDate, Time appointmentTime) {
+
         this.appointmentNo = appointmentNo;
         this.patientName = patientName;
         this.address = address;
         this.contactNumber = contactNumber;
+        this.email = email;
         this.dentistName = dentistName;
         this.treatmentType = treatmentType;
         this.appointmentDate = appointmentDate;
         this.appointmentTime = appointmentTime;
-    }
+}
 
     public String getAppointmentNo() {
         return appointmentNo;
@@ -59,10 +63,18 @@ public class Appointment {
     public String getContactNumber() {
         return contactNumber;
     }
-
+    
     public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
     }
+    
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+    this.email = email;
+}
 
     public String getDentistName() {
         return dentistName;
