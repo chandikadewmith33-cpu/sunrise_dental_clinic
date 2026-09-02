@@ -7,6 +7,7 @@ package view;
 import dao.AppointmentDAO;
 import model.Appointment;
 import javax.swing.JOptionPane;
+import service.PDFService;
 
 /**
  *
@@ -15,6 +16,7 @@ import javax.swing.JOptionPane;
 public class AppointmentDetails extends javax.swing.JFrame {
     
     private AppointmentDAO appointmentDAO;
+    private Appointment selectedAppointment;
 
     /**
      * Creates new form NewAppoinment
@@ -86,7 +88,10 @@ if (!appointmentNo.matches("[A-Za-z0-9-]+")) {
 
     if (appointment != null) {
 
-        StringBuilder sb = new StringBuilder();
+    // Store the found appointment for PDF generation
+    selectedAppointment = appointment;
+
+    StringBuilder sb = new StringBuilder();
 
         sb.append("========================================\n");
         sb.append("        APPOINTMENT DETAILS\n");

@@ -7,7 +7,7 @@ package view;
 import dao.AppointmentDAO;
 import model.Appointment;
 import model.Bill;
-
+import service.EmailService;
 import java.awt.print.PrinterException;
 import javax.swing.JOptionPane;
 
@@ -187,19 +187,66 @@ currentBill = new Bill(
     );
 
     boolean billSaved = appointmentDAO.saveBill(
-    currentBill.getAppointmentNo(),
-    currentBill.getConsultationFee(),
-    currentBill.getTreatmentCost(),
-    currentBill.getTotalAmount()
+        currentBill.getAppointmentNo(),
+        currentBill.getConsultationFee(),
+        currentBill.getTreatmentCost(),
+        currentBill.getTotalAmount()
 );
 
 if (!billSaved) {
+
     JOptionPane.showMessageDialog(
-        this,
-        "The bill could not be saved to the database.",
-        "Billing Error",
-        JOptionPane.ERROR_MESSAGE
+            this,
+            "The bill could not be saved to the database.",
+            "Billing Error",
+            JOptionPane.ERROR_MESSAGE
     );
+
+} else {
+
+    // Get patient email from Appointment object
+    String patientEmail = appointment.getEmail();
+
+    // Check whether an email address exists
+    if (patientEmail != null && !patientEmail.trim().isEmpty()) {
+
+        boolean emailSent = EmailService.sendAppointmentEmail(
+                patientEmail,
+                appointment.getPatientName(),
+                appointment.getAppointmentNo(),
+                ""
+        );
+
+        if (emailSent) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Bill saved successfully and email sent to:\n"
+                    + patientEmail,
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+        } else {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Bill was saved successfully, but the email could not be sent.\n"
+                    + "Please check the NetBeans Output window.",
+                    "Email Error",
+                    JOptionPane.WARNING_MESSAGE
+            );
+        }
+
+    } else {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Bill was saved successfully, but this patient does not have an email address.",
+                "Email Not Available",
+                JOptionPane.WARNING_MESSAGE
+        );
+    }
 }
 
     StringBuilder sb = new StringBuilder();
