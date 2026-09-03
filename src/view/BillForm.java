@@ -7,9 +7,10 @@ package view;
 import dao.AppointmentDAO;
 import model.Appointment;
 import model.Bill;
-import service.EmailService;
+
 import java.awt.print.PrinterException;
 import javax.swing.JOptionPane;
+
 
 /**
  *
@@ -157,28 +158,30 @@ public class BillForm extends javax.swing.JFrame {
         return;
     }
 
+    // Get treatment cost
     double treatmentCost =
         appointmentDAO.getTreatmentCost(
             appointment.getTreatmentType()
         );
 
-// Validate treatment cost
-if (treatmentCost <= 0) {
+    // Validate treatment cost
+    if (treatmentCost <= 0) {
 
-    txtArBill.setText("");
-    currentBill = null;
+        txtArBill.setText("");
+        currentBill = null;
 
-    JOptionPane.showMessageDialog(
-        this,
-        "Unable to retrieve the treatment cost.",
-        "Billing Error",
-        JOptionPane.ERROR_MESSAGE
-    );
+        JOptionPane.showMessageDialog(
+            this,
+            "Unable to retrieve the treatment cost.",
+            "Billing Error",
+            JOptionPane.ERROR_MESSAGE
+        );
 
-    return;
-}
+        return;
+    }
 
-currentBill = new Bill(
+    // Create bill
+    currentBill = new Bill(
         appointment.getAppointmentNo(),
         appointment.getPatientName(),
         appointment.getTreatmentType(),
@@ -186,69 +189,27 @@ currentBill = new Bill(
         treatmentCost
     );
 
+    // Save bill to database
     boolean billSaved = appointmentDAO.saveBill(
         currentBill.getAppointmentNo(),
         currentBill.getConsultationFee(),
         currentBill.getTreatmentCost(),
         currentBill.getTotalAmount()
-);
+    );
 
-if (!billSaved) {
+    if (!billSaved) {
 
-    JOptionPane.showMessageDialog(
+        JOptionPane.showMessageDialog(
             this,
             "The bill could not be saved to the database.",
             "Billing Error",
             JOptionPane.ERROR_MESSAGE
-    );
-
-} else {
-
-    // Get patient email from Appointment object
-    String patientEmail = appointment.getEmail();
-
-    // Check whether an email address exists
-    if (patientEmail != null && !patientEmail.trim().isEmpty()) {
-
-        boolean emailSent = EmailService.sendAppointmentEmail(
-                patientEmail,
-                appointment.getPatientName(),
-                appointment.getAppointmentNo(),
-                ""
         );
 
-        if (emailSent) {
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Bill saved successfully and email sent to:\n"
-                    + patientEmail,
-                    "Success",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
-
-        } else {
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Bill was saved successfully, but the email could not be sent.\n"
-                    + "Please check the NetBeans Output window.",
-                    "Email Error",
-                    JOptionPane.WARNING_MESSAGE
-            );
-        }
-
-    } else {
-
-        JOptionPane.showMessageDialog(
-                this,
-                "Bill was saved successfully, but this patient does not have an email address.",
-                "Email Not Available",
-                JOptionPane.WARNING_MESSAGE
-        );
+        return;
     }
-}
 
+    // Generate bill text
     StringBuilder sb = new StringBuilder();
 
     sb.append("========================================\n");
@@ -305,7 +266,15 @@ if (!billSaved) {
     sb.append("      Thank you for visiting us!\n");
     sb.append("========================================\n");
 
+    // Display bill in text area
     txtArBill.setText(sb.toString());
+
+    JOptionPane.showMessageDialog(
+        this,
+        "Bill generated and saved successfully.",
+        "Bill Generated",
+        JOptionPane.INFORMATION_MESSAGE
+    );
 }
 
 
