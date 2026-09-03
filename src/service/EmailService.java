@@ -7,9 +7,12 @@ import java.util.Properties;
 
 public class EmailService {
 
-    // CHANGE THESE TWO VALUES
-    private static final String SENDER_EMAIL = "dewmith.lankagps@gmail.com";
-    private static final String APP_PASSWORD = "qypfcujoybbrnuvu";
+    // Gmail sender account
+    private static final String SENDER_EMAIL =
+            "dewmith.lankagps@gmail.com";
+
+    private static final String APP_PASSWORD =
+            "vvhtvxprjiswbgti";
 
     public static boolean sendAppointmentEmail(
             String patientEmail,
@@ -21,16 +24,34 @@ public class EmailService {
 
         Properties properties = new Properties();
 
-        properties.put("mail.smtp.host", host);
-        properties.put("mail.smtp.port", "587");
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true");
+        properties.put(
+                "mail.smtp.host",
+                host
+        );
+
+        properties.put(
+                "mail.smtp.port",
+                "587"
+        );
+
+        properties.put(
+                "mail.smtp.auth",
+                "true"
+        );
+
+        properties.put(
+                "mail.smtp.starttls.enable",
+                "true"
+        );
 
         Session session = Session.getInstance(
                 properties,
                 new Authenticator() {
+
                     @Override
-                    protected PasswordAuthentication getPasswordAuthentication() {
+                    protected PasswordAuthentication
+                    getPasswordAuthentication() {
+
                         return new PasswordAuthentication(
                                 SENDER_EMAIL,
                                 APP_PASSWORD
@@ -41,33 +62,67 @@ public class EmailService {
 
         try {
 
-            Message message = new MimeMessage(session);
+            Message message =
+                    new MimeMessage(session);
 
             message.setFrom(
-                    new InternetAddress(SENDER_EMAIL)
+                    new InternetAddress(
+                            SENDER_EMAIL
+                    )
             );
 
             message.setRecipients(
                     Message.RecipientType.TO,
-                    InternetAddress.parse(patientEmail)
+                    InternetAddress.parse(
+                            patientEmail
+                    )
             );
 
             message.setSubject(
                     "Sunrise Dental Clinic - Appointment Confirmation"
             );
 
+            // HTML email body
             String emailBody =
-                    "Dear " + patientName + ",\n\n"
-                    + "Your appointment has been successfully registered "
-                    + "at Sunrise Dental Clinic.\n\n"
-                    + "Appointment Number: " + appointmentNo + "\n\n"
-                    + "Click here to see more details:\n"
-                    + pdfLink
-                    + "\n\n"
-                    + "Regards,\n"
-                    + "Sunrise Dental Clinic";
+                    "<html>"
+                    + "<body>"
+                    + "<p>Dear <b>" + patientName + "</b>,</p>"
 
-            message.setText(emailBody);
+                    + "<p>"
+                    + "Your appointment has been successfully "
+                    + "registered at Sunrise Dental Clinic."
+                    + "</p>"
+
+                    + "<p>"
+                    + "<b>Appointment Number:</b> "
+                    + appointmentNo
+                    + "</p>"
+
+                    + "<p>"
+                    + "Please click the link below to view "
+                    + "your appointment details:"
+                    + "</p>"
+
+                    + "<p>"
+                    + "<a href=\"" + pdfLink + "\">"
+                    + "Click here to view your appointment details"
+                    + "</a>"
+                    + "</p>"
+
+                    + "<p>"
+                    + "Regards,<br>"
+                    + "<b>Sunrise Dental Clinic</b>"
+                    + "</p>"
+
+                    + "</body>"
+                    + "</html>";
+
+            // IMPORTANT:
+            // Tell Gmail this is an HTML email
+            message.setContent(
+                    emailBody,
+                    "text/html; charset=UTF-8"
+            );
 
             Transport.send(message);
 
