@@ -14,6 +14,9 @@ import javax.swing.JOptionPane;
 import model.Appointment;
 import dao.UserDAO;
 import service.EmailService;
+import service.PDFService;
+import service.LocalPDFServer;
+import java.io.File;
 
 /**
  *
@@ -406,13 +409,36 @@ if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
 
         if (success) {
 
-    // Send appointment confirmation email
-    boolean emailSent = EmailService.sendAppointmentEmail(
-            email,
-            patientName,
-            appointmentNo,
-            "Please contact Sunrise Dental Clinic for your appointment details."
+    // Generate appointment PDF
+String pdfPath = PDFService.generateAppointmentPDF(appointment);
+
+if (pdfPath == null) {
+
+    JOptionPane.showMessageDialog(
+            this,
+            "Appointment registered, but PDF generation failed.",
+            "PDF Error",
+            JOptionPane.WARNING_MESSAGE
     );
+
+    clearForm();
+    return;
+}
+
+// Create localhost PDF link
+File pdfFile = new File(pdfPath);
+
+String pdfUrl = LocalPDFServer.getPDFUrl(
+        pdfFile.getName()
+);
+
+// Send email with clickable PDF link
+boolean emailSent = EmailService.sendAppointmentEmail(
+        email,
+        patientName,
+        appointmentNo,
+        pdfUrl
+);
 
     if (emailSent) {
 
